@@ -41,7 +41,7 @@ end
 
 
 
-# Write a recursive method that returns all of the permutations of an array
+# Write a recursive method that returns all of the subsets of an array
 def generate_combos(array, target)
     combos = []
     array.each_with_index do |el, idx|
@@ -52,7 +52,18 @@ def generate_combos(array, target)
 end
 
 
+
+# Write a recursive method that returns all of the permutations of an array
 def permutations(array)
+    return [[]] if array.length == 0
+
+    previous_stack = permutations(array[0...-1])
+    previous_stack += previous_stack.map {|permutation| permutation.dup + [array[-1]]}
+end
+
+
+
+def subsets(array)
     return [array] if array.length == 1
 
     combos = []
@@ -60,18 +71,41 @@ def permutations(array)
             combos << [el] if !combos.include?([el])
             rest = array.dup.reject {|item| item == el}
 
-            permutations(rest).each do |current_combo|
+            subsets(rest).each do |current_combo|
                 combos << current_combo if !combos.include?current_combo
                 combos += generate_combos(current_combo, el)
             end
     end
 
-    final_perms = []
+    final_subs = []
     combos.each do |perm|
-        final_perms << perm if !final_perms.include?(perm)
+        final_subs << perm if !final_subs.include?(perm)
     end
-    final_perms.sort
+    final_subs.sort
 end
+
+
+
+def titleize(title)
+    no_cap_words = ['a', 'and', 'of', 'over', 'the']
+    arr = title.split(" ")
+
+    final_title = []
+    arr.each do |word|
+        first_let = word[0].upcase
+        rest = word[1..-1].downcase
+        titleized_word = first_let + rest
+
+        unless no_cap_words.include?(titleized_word.downcase) && final_title.length != 0
+            final_title += [titleized_word]
+        else
+            final_title += [word]
+        end
+    end
+
+    final_title.join(" ")
+end
+
 
 
 #####################################################################
@@ -137,6 +171,30 @@ class Hash
         end
         inverted
     end
+end
+
+
+
+#####################################################################
+# string class
+#####################################################################
+class String
+  
+    def symmetric_substrings
+        subs = [] 
+        idx1 = 0
+        while idx1 <= self.length - 2
+            idx2 = idx1 + 1
+            while idx2 <= self.length - 1
+                current_sub = self[idx1..idx2]
+                subs << current_sub if current_sub == current_sub.reverse
+                idx2 += 1
+            end
+            idx1 += 1
+        end
+        subs
+    end
+  
 end
 
 
