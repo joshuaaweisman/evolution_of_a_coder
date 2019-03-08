@@ -4,6 +4,81 @@ require "byebug"
 #####################################################################
 # independent methods
 #####################################################################
+# Using recursion and the is_a? method,
+# write an Array#deep_dup method that will perform a "deep" duplication of the interior arrays.
+def deep_dup(arr)
+    return arr if !arr.is_a?(Array)
+
+    new_arr = []
+    arr.each do |el|
+        new_arr << deep_dup(el)
+    end
+
+    new_arr
+end
+
+
+
+# Write a recursive method that returns all of the subsets of an array
+def generate_combos(array, target)
+    combos = []
+    array.each_with_index do |el, idx|
+        current_combo = array.dup.insert(idx, target)
+        combos << current_combo
+    end
+    combos << (array.dup << target)
+end
+
+
+
+#In this little assignment you are given a string of space separated numbers, and have to return the highest and lowest number.
+# high_and_low("1 2 3 4 5")  # return "5 1"
+# high_and_low("1 2 -3 4 5") # return "5 -3"
+# high_and_low("1 9 3 4 -5") # return "9 -5"
+def high_and_low(numbers)
+    ints = numbers.split(" ").map(&:to_i)
+    "#{ints.max} #{ints.min}"
+end
+
+
+
+# Write a method, least_common_multiple, that takes in two numbers and returns the smallest number that is a mutiple 
+# of both of the given numbers
+def least_common_multiple(num_1, num_2)
+    i = num_2
+    while true
+        return i if i % num_1 == 0 && i % num_2 == 0
+        i += num_2
+    end
+end
+
+
+
+# Write a method, most_frequent_bigram, that takes in a string and returns the two adjacent letters that appear the
+# most in the string.
+def most_frequent_bigram(str)
+    bigram_counts = Hash.new(0)
+
+    str.chars.each_with_index do |char1, idx|
+        char2 = str.chars[idx + 1]
+        bigram = "#{char1}#{char2}"
+        bigram_counts[bigram] += 1
+    end
+
+    best_bigram = nil
+    best_count = 0
+    bigram_counts.each do |key, val|
+        if val > best_count
+            best_count = val
+            best_bigram = key
+        end
+    end
+
+    best_bigram
+end
+
+
+
 # Leetcode #200
 # Given a 2d grid map of '1's (land) and '0's (water), count the number of islands. An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.
 
@@ -57,56 +132,8 @@ require "byebug"
                                             #     count
                                             # end
 
-
-
-# Write a method, least_common_multiple, that takes in two numbers and returns the smallest number that is a mutiple 
-# of both of the given numbers
-def least_common_multiple(num_1, num_2)
-    i = num_2
-    while true
-        return i if i % num_1 == 0 && i % num_2 == 0
-        i += num_2
-    end
-end
-
-
-
-# Write a method, most_frequent_bigram, that takes in a string and returns the two adjacent letters that appear the
-# most in the string.
-def most_frequent_bigram(str)
-    bigram_counts = Hash.new(0)
-
-    str.chars.each_with_index do |char1, idx|
-        char2 = str.chars[idx + 1]
-        bigram = "#{char1}#{char2}"
-        bigram_counts[bigram] += 1
-    end
-
-    best_bigram = nil
-    best_count = 0
-    bigram_counts.each do |key, val|
-        if val > best_count
-            best_count = val
-            best_bigram = key
-        end
-    end
-
-    best_bigram
-end
-
-
-
-# Write a recursive method that returns all of the subsets of an array
-def generate_combos(array, target)
-    combos = []
-    array.each_with_index do |el, idx|
-        current_combo = array.dup.insert(idx, target)
-        combos << current_combo
-    end
-    combos << (array.dup << target)
-end
-
-
+#{"pos"=>[1, 4, 7, 11, 13, 16, 18, 20, 22]
+#"peaks"=>[20, 14, 12, 18, 9, 7, 11, 10, 6]}
 
 # Write a recursive method that returns all of the permutations of an array
 def permutations(array)
@@ -211,6 +238,50 @@ class Array
         end
 
         self
+    end
+
+
+
+
+    # Takes a multi-dimentional array and returns a single array of all the elements
+    # [1,[2,3], [4,[5]]].my_controlled_flatten(1) => [1,2,3,4,5]
+    def my_flatten
+        return [self] if !self.is_a?(Array)
+
+        final_arr = []
+        self.each do |el|
+            if el.is_a?(Array)
+                final_arr += el.my_flatten
+            else
+                final_arr << el
+            end
+        end
+
+        final_arr
+    end
+
+
+
+    # Write a version of flatten that only flattens n levels of an array.
+    # E.g. If you have an array with 3 levels of nested arrays, and run
+    # my_flatten(1), you should return an array with 2 levels of nested
+    # arrays
+    #
+    # [1,[2,3],[4]].my_controlled_flatten(1) => [1,2,3,4,[5]]
+    def flatten_once
+        final_arr = []
+        self.each do |el|
+            el.is_a?(Array) ? final_arr += el : final_arr << el
+        end
+        final_arr
+    end
+    
+    def my_controlled_flatten(n)
+        new_arr = self
+        n.times do
+            new_arr = new_arr.flatten_once
+        end
+        new_arr
     end
 
 
