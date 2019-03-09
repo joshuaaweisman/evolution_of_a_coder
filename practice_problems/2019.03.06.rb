@@ -4,6 +4,39 @@ require "byebug"
 #####################################################################
 # independent methods
 #####################################################################
+# Write a recursive method that returns the first "num" factorial numbers.
+# Note that the 1st factorial number is 0!, which equals 1. The 2nd factorial
+# is 1!, the 3rd factorial is 2!, etc.
+def factorials_rec(num)
+    return [1] if num == 1
+    factorials_rec(num - 1) << factorials_rec(num - 1).last * (num - 1)
+end
+
+
+
+# Your task is to construct a building which will be a pile of n cubes. The cube at the bottom will have a volume of n^3, the cube above will have volume of (n-1)^3 and so on until the top which will have a volume of 1^3.
+# You are given the total volume m of the building. Being given m can you find the number n of cubes you will have to build?
+# The parameter of the function findNb (find_nb, find-nb, findNb) will be an integer m and you have to return the integer n such as n^3 + (n-1)^3 + ... + 1^3 = m if such a n exists or -1 if there is no such n.
+# findNb(1071225) --> 45
+# findNb(91716553919377) --> -1
+def cube_volume(levels)
+    return 1 if levels == 1
+    levels**3 + cube_volume(levels - 1)
+end
+
+
+def find_nb(m)
+    num_of_levels = Math.sqrt(m)
+    while true
+        volume = cube_volume(num_of_levels)
+        return num_of_levels if volume == m
+        return -1 if volume > m
+        num_of_levels += 1
+    end
+end
+
+
+
 # Using recursion and the is_a? method,
 # write an Array#deep_dup method that will perform a "deep" duplication of the interior arrays.
 def deep_dup(arr)
@@ -51,6 +84,37 @@ def least_common_multiple(num_1, num_2)
         i += num_2
     end
 end
+
+
+
+# make better change
+def make_better_change(change_needed, coins) #14 [10, 7, 1]
+    options = []
+    return options if change_needed == 0
+
+    coins.each do |current_coin|
+        if current_coin <= change_needed
+            balance = change_needed - current_coin
+            possibility = [current_coin] + make_better_change(balance, coins)
+            options << possibility if possibility.length > 0
+        end
+    end
+
+    options.sort_by!(&:length)
+    options[0]
+end
+
+# 24 [10, 7, 1]
+
+# put 10 into the pile
+# decrement 24 by 10 --> now it's 14
+# add the pile to make_better_change(14, [10, 7, 1])
+# This is now ONE OPTION
+# So put it into your array of options
+# At the very end, this array of options will have all the possible solutions to the problem
+# Sort them all by length
+# Return the shortest one
+
 
 
 
@@ -151,15 +215,14 @@ end
 #
 # string_include_key?("cadbpc", "abc") => true
 # string_include_key("cba", "abc") => false
-def string_include_key?(string, key)
-    return true if key.length == 0
-
-    target_char = key[0]
+def string_include_key(string, key)
+    return true if key == ""
     string.each_char.with_index do |char, idx|
-        if char == target_char
-            return string_include_key?(string[idx + 1..-1], key[1..-1])
+        if char == key[0]
+            return string_include_key(string[(idx + 1)..-1], key[1..-1])
         end
     end
+
     false
 end
 
@@ -207,6 +270,94 @@ def titleize(title)
     end
 
     final_title.join(" ")
+end
+
+
+
+# Sudoku Solution Validator
+# Write a function validSolution/ValidateSolution/valid_solution() that accepts a 2D array representing a Sudoku board, and returns true if it is a valid solution, or false otherwise. The cells of the sudoku board may also contain 0's, which will represent empty cells. Boards containing one or more zeroes are considered to be invalid solutions.
+# The board is always 9 cells by 9 cells, and every cell only contains integers from 0 to 9.
+# Examples
+# validSolution([
+#   [5, 3, 4, 6, 7, 8, 9, 1, 2],
+#   [6, 7, 2, 1, 9, 5, 3, 4, 8],
+#   [1, 9, 8, 3, 4, 2, 5, 6, 7],
+#   [8, 5, 9, 7, 6, 1, 4, 2, 3],
+#   [4, 2, 6, 8, 5, 3, 7, 9, 1],
+#   [7, 1, 3, 9, 2, 4, 8, 5, 6],
+#   [9, 6, 1, 5, 3, 7, 2, 8, 4],
+#   [2, 8, 7, 4, 1, 9, 6, 3, 5],
+#   [3, 4, 5, 2, 8, 6, 1, 7, 9]
+# ]); // => true
+# validSolution([
+#   [5, 3, 4, 6, 7, 8, 9, 1, 2], 
+#   [6, 7, 2, 1, 9, 0, 3, 4, 8],
+#   [1, 0, 0, 3, 4, 2, 5, 6, 0],
+#   [8, 5, 9, 7, 6, 1, 0, 2, 0],
+#   [4, 2, 6, 8, 5, 3, 7, 9, 1],
+#   [7, 1, 3, 9, 2, 4, 8, 5, 6],
+#   [9, 0, 1, 5, 3, 7, 2, 1, 4],
+#   [2, 8, 7, 4, 1, 9, 6, 3, 5],
+#   [3, 0, 0, 4, 8, 1, 1, 7, 9]
+# ]); // => false
+def rotate(board)
+    new_board = Array.new(9) {[]}
+
+    i = 0
+    while i < board.length
+        board.each {|row| new_board[i] << row[i]}
+        i += 1
+    end
+
+    new_board
+end
+
+
+def find_squares(grid)
+    square_01 = grid[0][0..2] + grid[1][0..2] + grid[2][0..2]
+    square_02 = grid[0][3..5] + grid[1][3..5] + grid[2][3..5]
+    square_03 = grid[0][6..8] + grid[1][6..8] + grid[2][6..8]
+    square_04 = grid[3][0..2] + grid[4][0..2] + grid[5][0..2]
+    square_05 = grid[3][3..5] + grid[4][3..5] + grid[5][3..5]
+    square_06 = grid[3][6..8] + grid[4][6..8] + grid[5][6..8]
+    square_07 = grid[6][0..2] + grid[7][0..2] + grid[8][0..2]
+    square_08 = grid[6][3..5] + grid[7][3..5] + grid[8][3..5]
+    square_09 = grid[6][6..8] + grid[7][6..8] + grid[8][6..8]
+    return [square_01, square_02, square_03, square_04, square_05, square_06, square_07, square_08]
+end
+
+
+def check_row(board)
+    used_tiles = []
+    board.each do |row|
+        row.each do |tile|
+            return false if tile == 0 || used_tiles.include?(tile)
+            used_tiles << tile
+        end
+        used_tiles = []
+    end
+    true
+end
+
+
+def check_column(board)
+    flipped_board = rotate(board)
+    check_row(flipped_board)
+end
+
+
+def check_squares(board)
+    squares_board = find_squares(board)
+    check_row(squares_board)
+end
+
+
+def valid_solution(board)
+    return false if board.any? {|row| row.include?(0)}
+    return false unless check_row(board)
+    return false unless check_column(board)
+    return false unless check_squares(board)
+    true
 end
 
 
@@ -289,6 +440,22 @@ class Array
     # my_all
     def my_all?(&prc)
         self.each {|el| return false if prc.call(el) == false}
+    end
+
+
+
+    # Monkey patch the Array class and add a my_inject method. If my_inject receives
+    # no argument, then use the first element of the array as the default accumulator.
+    def my_inject(accumulator = nil)
+        debugger
+        if accumulator == nil
+            accumulator = self[0]
+            self[1..-1].each {|el| accumulator += el}
+        else
+            self[0..-1].each {|el| accumulator += el}
+        end
+
+        accumulator  
     end
 
 
