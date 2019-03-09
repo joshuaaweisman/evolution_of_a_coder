@@ -87,25 +87,6 @@ end
 
 
 
-# make better change
-def make_better_change(change_needed, coins) #14 [10, 7, 1]
-    options = []
-    return options if change_needed == 0
-
-    coins.each do |current_coin|
-        if current_coin <= change_needed
-            balance = change_needed - current_coin
-            possibility = [current_coin] + make_better_change(balance, coins)
-            options << possibility if possibility.length > 0
-        end
-    end
-
-    options.sort_by!(&:length)
-    options[0]
-end
-
-
-
 # Write a method, most_frequent_bigram, that takes in a string and returns the two adjacent letters that appear the
 # most in the string.
 def most_frequent_bigram(str)
@@ -193,6 +174,60 @@ def permutations(array)
 
     previous_stack = permutations(array[0...-1])
     previous_stack += previous_stack.map {|permutation| permutation.dup + [array[-1]]}
+end
+
+
+
+# You have array of integers. Write a recursive solution to find the sum of the integers.
+def sum_recur(array)
+    return 0 if array.empty?
+    array.first + sum_recur(array[1..-1])
+end
+
+
+
+# In "Practical Ruby Projects," the author includes a couple of chapters involving coin simulations. These simulators are used to explore the possibilities of replacing a certain coin or adding a new coin.
+# One interesting subproblem of these simulations is that of making change. For example, if we need to give 39 cents change in the United States (where there are 25, 10, 5, and 1 cent pieces), we can give:
+# ruby
+#     >> make_change(39)
+#     => [25, 10, 1, 1, 1, 1]
+def make_change(change_needed, cash_register)
+    return [] if change_needed == 0
+    
+    pile_of_coins = []
+    biggest_coin = cash_register[0]
+    remaining_balance = change_needed
+
+    until remaining_balance == 0
+        remaining_balance = change_needed - pile_of_coins.sum
+
+        if remaining_balance >= biggest_coin
+            pile_of_coins << biggest_coin
+        else
+            pile_of_coins += make_change(remaining_balance, cash_register[1..-1])
+        end
+    end
+
+    pile_of_coins
+end
+
+
+
+# make better change
+def make_better_change(change_needed, coins)
+    options = []
+    return options if change_needed == 0
+
+    coins.each do |current_coin|
+        if current_coin <= change_needed
+            balance = change_needed - current_coin
+            possibility = [current_coin] + make_better_change(balance, coins)
+            options << possibility if possibility.length > 0
+        end
+    end
+
+    options.sort_by!(&:length)
+    options[0]
 end
 
 
