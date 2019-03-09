@@ -104,18 +104,6 @@ def make_better_change(change_needed, coins) #14 [10, 7, 1]
     options[0]
 end
 
-# 24 [10, 7, 1]
-
-# put 10 into the pile
-# decrement 24 by 10 --> now it's 14
-# add the pile to make_better_change(14, [10, 7, 1])
-# This is now ONE OPTION
-# So put it into your array of options
-# At the very end, this array of options will have all the possible solutions to the problem
-# Sort them all by length
-# Return the shortest one
-
-
 
 
 # Write a method, most_frequent_bigram, that takes in a string and returns the two adjacent letters that appear the
@@ -390,7 +378,6 @@ class Array
 
         self
     end
-
 
 
 
