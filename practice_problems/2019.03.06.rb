@@ -165,6 +165,14 @@ end
 
 
 
+# Write a function ice_cream_shop(flavors, favorite) that takes in an array of ice cream flavors available at the ice cream shop, as well as the user's favorite ice cream flavor. Recursively find out whether or not the shop offers their favorite flavor.
+def ice_cream_shop(flavors, favorite)
+    return false if flavors.empty?
+    flavors[0] == favorite ? true : ice_cream_shop(flavors[1..-1], favorite)
+end
+
+
+
 # Leetcode #200
 # Given a 2d grid map of '1's (land) and '0's (water), count the number of islands. An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.
 
