@@ -52,7 +52,7 @@ end
 
 
 
-# Write a recursive method that returns all of the subsets of an array
+# Write a recursive method that places a target value before, between, and after every element of an array
 def generate_combos(array, target)
     combos = []
     array.each_with_index do |el, idx|
@@ -60,6 +60,39 @@ def generate_combos(array, target)
         combos << current_combo
     end
     combos << (array.dup << target)
+end
+
+
+
+# Write a recursive method that returns all subsets of an array
+def subsets(array)
+    return [array] if array.length == 1
+
+    combos = []
+    array.each do |el|
+            combos << [el] if !combos.include?([el])
+            rest = array.dup.reject {|item| item == el}
+
+            subsets(rest).each do |current_combo|
+                combos << current_combo if !combos.include?current_combo
+                combos += generate_combos(current_combo, el)
+            end
+    end
+
+    final_subs = []
+    combos.each do |perm|
+        final_subs << perm if !final_subs.include?(perm)
+    end
+    final_subs.sort
+end
+
+
+
+# subsets v2
+def subsets_v2(array)
+    return [[]] if array.empty?
+    previous_subset = subsets_v2(array[0...-1])    
+    previous_subset + previous_subset.map {|set| set += [array.last]}
 end
 
 
@@ -164,17 +197,25 @@ end
                                                 
                                             #     count
                                             # end
-
 #{"pos"=>[1, 4, 7, 11, 13, 16, 18, 20, 22]
 #"peaks"=>[20, 14, 12, 18, 9, 7, 11, 10, 6]}
+
+
 
 # Write a recursive method that returns all of the permutations of an array
 def permutations(array)
     return [[]] if array.length == 0
 
-    previous_stack = permutations(array[0...-1])
-    previous_stack += previous_stack.map {|permutation| permutation.dup + [array[-1]]}
+    final_arr = []
+    previous_perms = permutations(array[0...-1])
+    previous_perms.each do |set|
+        (0..set.length).to_a.each {|idx| final_arr << set.dup.insert(idx, array.last)}
+    end
+
+    final_arr
 end
+
+
 
 
 
@@ -251,30 +292,6 @@ end
 
 
 
-def subsets(array)
-
-    return [array] if array.length == 1
-
-    combos = []
-    array.each do |el|
-            combos << [el] if !combos.include?([el])
-            rest = array.dup.reject {|item| item == el}
-
-            subsets(rest).each do |current_combo|
-                combos << current_combo if !combos.include?current_combo
-                combos += generate_combos(current_combo, el)
-            end
-    end
-
-    final_subs = []
-    combos.each do |perm|
-        final_subs << perm if !final_subs.include?(perm)
-    end
-    final_subs.sort
-end
-
-
-
 def includes?(array, target)
     return false if array.empty?
     array[0] == target ? true : includes?(array[1..-1], target)
@@ -301,6 +318,11 @@ def titleize(title)
     end
 
     final_title.join(" ")
+end
+
+
+
+def num_occur(array, target)
 end
 
 
