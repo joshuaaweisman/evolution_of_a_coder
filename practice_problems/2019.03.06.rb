@@ -144,6 +144,7 @@ def most_frequent_bigram(str)
 end
 
 
+
 # You have array of integers. Write a recursive solution to determine whether or not two adjacent elements of the array add to 12.
 def add_to_twelve?(array)
     return false if array.length < 2
@@ -151,6 +152,15 @@ def add_to_twelve?(array)
     first = array[0]
     second = array[1]
     array[0] + array[1] == 12 ? true : add_to_twelve?(array[1..-1])
+end
+
+
+
+# You have array of integers. Write a recursive solution to determine if the array is sorted.
+def sorted?(array)
+    return true if array.length < 2
+    return true if array.length == 2 && array[0] <= array[1]
+    array[0] > array[1] ? false : sorted?(array[1..-1])
 end
 
 
