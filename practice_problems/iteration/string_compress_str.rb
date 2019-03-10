@@ -1,15 +1,6 @@
-require "byebug"
-
 # Write a method, compress_str(str), that accepts a string as an arg.
 # The method should return a new str where streaks of consecutive characters are compressed.
 # For example "aaabbc" is compressed to "3a2bc".
-
-# accepts a STRING
-# returns a NEW STRING
-
-# select letter
-# if next letter == current letter, increment counter
-# if not, return "#{counter}#{letter}" --> if counter == 0, just return letter
 
 def compress_str(str)
     final_str = ""
