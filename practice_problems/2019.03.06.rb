@@ -144,6 +144,16 @@ def most_frequent_bigram(str)
 end
 
 
+# You have array of integers. Write a recursive solution to determine whether or not two adjacent elements of the array add to 12.
+def add_to_twelve?(array)
+    return false if array.length < 2
+
+    first = array[0]
+    second = array[1]
+    array[0] + array[1] == 12 ? true : add_to_twelve?(array[1..-1])
+end
+
+
 
 # Leetcode #200
 # Given a 2d grid map of '1's (land) and '0's (water), count the number of islands. An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.
@@ -322,6 +332,7 @@ end
 
 
 
+# You have an unsorted array of integers. Write a recursive solution to count the number of occurrences of a specific value.
 def num_occur(array, target)
     count = 0
     return count if array.empty?
