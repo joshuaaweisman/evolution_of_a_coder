@@ -1,5 +1,3 @@
-require "byebug"
-
 # Write a method, String#substrings, that takes in a optional length argument
 # The method should return an array of the substrings that have the given length.
 # If no length is given, return all substrings.
