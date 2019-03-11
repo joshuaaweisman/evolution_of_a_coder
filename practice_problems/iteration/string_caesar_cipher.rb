@@ -1,5 +1,3 @@
-require "byebug"
-
 # Write a method, String#caesar_cipher, that takes in an a number.
 # The method should return a new string where each char of the original string is shifted
 # the given number of times in the alphabet.
