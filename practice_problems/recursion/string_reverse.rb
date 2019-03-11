@@ -1,5 +1,3 @@
-require "byebug"
-
 # Write a method, reverse_string(str), that takes in a string.
 # The method should return the string with it's characters in reverse order.
 #
