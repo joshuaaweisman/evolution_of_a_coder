@@ -1,5 +1,3 @@
-require "byebug"
-
 # Write a method, `digital_root(num)`. It should Sum the digits of a positive
 # integer. If it is greater than 10, sum the digits of the resulting number.
 # Keep repeating until there is only one digit in the result, called the

@@ -1,5 +1,3 @@
-require "byebug"
-
 # Write a method, `digital_root(num)`. It should Sum the digits of a positive
 # integer. If it is greater than 10, sum the digits of the resulting number.
 # Keep repeating until there is only one digit in the result, called the
@@ -11,16 +9,14 @@ require "byebug"
 # Example:
 # digital_root(4322) => digital_root(11) => (2)
 
-def digital_root_step(num)
+def digital_root(num)
     digit1 = num / 10
     digit2 = num % 10
     sum = digit1 + digit2
-end
 
-def digital_root(num)
-    until num < 10
-        num = digital_root_step(num)
+    if sum < 10
+        sum
+    else
+        digital_root(sum)
     end
-    
-    num
 end
