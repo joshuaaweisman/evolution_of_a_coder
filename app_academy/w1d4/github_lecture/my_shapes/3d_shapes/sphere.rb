@@ -1,5 +1,5 @@
 class Sphere
-    def initialize
-        
+    def initialize(radius)
+        @radius = radius
     end
 end
